@@ -33,30 +33,35 @@ function n = run_US_data(Fout,max_iter)
     A1 = ones(size(M1,1),size(M1,2));
     A2 = ones(size(M2,1),size(M2,2));
 
-    Z1 = squeeze(sum(M1,2));
-    Z2 = squeeze(sum(M2,2));
+    tZ1 = squeeze(sum(M1,2));
+    tZ2 = squeeze(sum(M2,2));
     
-    pop1 = sum(Z1,1);
-    pop2 = sum(Z2,1);
+    pop1 = sum(tZ1,1);
+    pop2 = sum(tZ2,1);
+    
+    tM1 = M1;
+    tM2 = M2;
     
     tic
-    [M1m,phi1m,Z1m,M2m,phi2m,Z2m,Lm] = Vec_MVCGM(ones(size(M1)),ones(size(M2)),max_iter,M1,M2,pop1,pop2,A1,A2,Z1,Z2,D);
-    tm = toc;
-    save("multi_"+Fout,"M1m","M2m","Z1m","Z2m","tm","Lm");
+    [M1,phi1,Z1,M2,phi2,Z2,L] = Vec_MVCGM(ones(size(M1)),ones(size(M2)),max_iter,tM1,tM2,pop1,pop2,A1,A2,tZ1,tZ2,D);
+    t = toc;
+    nae1 = Mdiff(tM1,M1);
+    nae1 = nae1(1);
+    nae2 = Mdiff(tM2,M2);
+    nae2 = nae2(1);
+    save("multi_"+Fout,"M1","M2","Z1","Z2","t","L","nae1","nae2");
     flag=1
     
     tic
-    [Mb,Zb,phib,Lb] = Vec_CGM(ones(size(M1)),max_iter,M1+M2,pop1+pop2,A1,Z1+Z2,D);
-    tt = toc;
-    save("base_all_"+Fout,"Mb","Zb","tt","Lb");
+    [M1,Z1,phi1,L1] = Vec_CGM(ones(size(M1)),max_iter,tM1,pop1,A1,tZ1,D);
     flag=2
-    
-    tic
-    [M1b,Z1b,phi1b,Lb1] = Vec_CGM(ones(size(M1)),max_iter,M1,pop1,A1,Z1,D);
-    flag=2
-    [M2b,Z2b,phi2b,Lb2] = Vec_CGM(ones(size(M1)),max_iter,M2,pop2,A2,Z2,D);
-    tb = toc;
-    save("base_"+Fout,"M1b","M2b","Z1b","Z2b","tb","Lb1","Lb2");
+    [M2,Z2,phi2,L2] = Vec_CGM(ones(size(M1)),max_iter,tM2,pop2,A2,tZ2,D);
+    t = toc;
+    nae1 = Mdiff(tM1,M1);
+    nae1 = nae1(1);
+    nae2 = Mdiff(tM2,M2);
+    nae2 = nae2(1);
+    save("base_"+Fout,"M1","M2","Z1","Z2","t","L1","L2","nae1","nae2");
     
     flag=3
     

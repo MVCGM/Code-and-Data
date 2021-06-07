@@ -43,23 +43,45 @@ function n = run_Japan_data(pref,Fout,max_iter)
     
     %Run algorithms, track time
     tic
-    [M1m,phi1m,Z1m,M2m,phi2m,Z2m,Lm] = Japan_MVCGM(ones(size(fM1)),ones(size(fM2)),max_iter,fM1,fM2,fpop1,fpop2,A1,A2,fZ1,fZ2);
-    tm = toc;
-    save("multi_"+Fout,"M1m","M2m","Z1m","Z2m","tm","Lm");
+    [M1,phi1,Z1,M2,phi2,Z2,L] = Japan_MVCGM(ones(size(fM1)),ones(size(fM2)),max_iter,fM1,fM2,fpop1,fpop2,A1,A2,fZ1,fZ2);
+    t = toc;
+    nae1 = 0;
+    nae2 = 0;
+    for i=1:size(M1,1)
+        nae1 = nae1 + Mdiff(squeeze(fM1(1,:,:,:,:)),squeeze(M1(1,:,:,:,:)));
+        nae2 = nae2 + Mdiff(squeeze(fM2(1,:,:,:,:)),squeeze(M2(1,:,:,:,:)));
+    end
+    nae1 = nae1(1)/size(M1,1);
+    nae2 = nae2(1)/size(M2,1);
+    save("multi_"+Fout,"M1","M2","Z1","Z2","t","L","nae1","nae2");
     flag=1
     
     tic
-    [M1b,Z1b,phi1b,Lb1] = Japan_CGM(ones(size(fM1)),max_iter,fpop1,A1,fM1,fZ1);
+    [M1,Z1,phi1b,L1] = Japan_CGM(ones(size(fM1)),max_iter,fpop1,A1,fM1,fZ1);
     flag=2
-    [M2b,Z2b,phi2b,Lb2] = Japan_CGM(ones(size(fM2)),max_iter,fpop2,A2,fM2,fZ2);
-    tb = toc;
-    save("base_"+Fout,"M1b","M2b","Z1b","Z2b","tb","Lb1","Lb2");
+    [M2,Z2,phi2b,L2] = Japan_CGM(ones(size(fM2)),max_iter,fpop2,A2,fM2,fZ2);
+    t = toc;
+    nae1 = 0;
+    nae2 = 0;
+    for i=1:size(M1,1)
+        nae1 = nae1 + Mdiff(squeeze(fM1(1,:,:,:,:)),squeeze(M1(1,:,:,:,:)));
+        nae2 = nae2 + Mdiff(squeeze(fM2(1,:,:,:,:)),squeeze(M2(1,:,:,:,:)));
+    end
+    nae1 = nae1(1)/size(fM1,1);
+    nae2 = nae2(1)/size(fM2,1);
+    save("base_"+Fout,"M1","M2","Z1","Z2","t","L1","L2","nae1","nae2");
     flag=3
     
+    fM = fM1+fM2;
     tic
-    [Mb,Zb,phib,Lb] = Japan_CGM(ones(size(fM1)),max_iter,fpop1+fpop2,A1,fM1+fM2,fZ1+fZ2);
-    tt = toc;
-    save("base_all_"+Fout,"Mb","Zb","tt","Lb");
+    [M,Z,phi,L] = Japan_CGM(ones(size(fM1)),max_iter,fpop1+fpop2,A1,fM1+fM2,fZ1+fZ2);
+    t = toc;
+    nae = 0;
+    for i=1:size(M1,1)
+        nae = nae + Mdiff(squeeze(fM(1,:,:,:,:)),squeeze(M(1,:,:,:,:)));
+    end
+    nae = nae1(1)/size(fM,1);
+    save("base_all_"+Fout,"M","Z","t","L","nae");
     flag=4
     
     
