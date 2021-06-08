@@ -41,26 +41,26 @@ run_Japan_data() will load the pre-processed Nightly Inc data, and run the Singl
 
 Usage: run_Japan_data(pref,Fout,max_iter)
   pref - Determines which city data to use.  Must be the strings 'Tokyo', 'Osaka', or 'Nagoya'.
-  Fout - Base string for output files.  Should end in '.m'.
+  Fout - Base string for output files.  Should end in '.mat'.
   max_iter - Maximum number of iterations for each algorithm.
   
 Output: The script will save 3 output files to the current directory.  Each file will end in the string specified by 'Fout', and start with the strings 'base_', 'base_all_', and 'multi_'.  These correspond to the 2 CGMs, Single CGM, and Multiview CGM algorithms, respectively.
 Each of these output files will have the predicted values of M and Z, indexed by view, the NAE values of each view, and a runtime t.  The Single CGM algorithm will only have outputs for a single view, which is the combination of both views.
 
 To reproduce paper experiments:
-run_Japan_data('Tokyo','Tokyo.m',500)
-run_Japan_data('Osaka','Osaka.m',500)
-run_Japan_data('Nagoya','Nagoya.m',500)
+run_Japan_data('Tokyo','Tokyo.mat',500)
+run_Japan_data('Osaka','Osaka.mat',500)
+run_Japan_data('Nagoya','Nagoya.mat',500)
 
 # US job and migration data
 run_US_data() will load the pre-processed census data and run the 2 CGMs and Multiview CGM algorithms on it.
 
 Usage: run_US_data(Fout,max_iter)
-  Fout - Base string for output files.  Should end in '.m'.
+  Fout - Base string for output files.  Should end in '.mat'.
   max_iter - Maximum number of iterations for each algorithm.
   
 Output: The script will save 2 output files to the current directory.  Each file will end in the string specified by 'Fout', and start with the strings 'base_' and 'multi_'.  These correspond to the 2 CGMs and Multiview CGM algorithms, respectively.
 Each of these output files will have the predicted values of M and Z, indexed by view, the NAE values of each view, and a runtime t.  View 1 is the flow of jobs between states, view 2 is the migration of people between states.
 
 To reproduce paper experiments:
-run_US_data('US.m',500)
+run_US_data('US.mat',500)
