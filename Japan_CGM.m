@@ -77,7 +77,8 @@ function [fM,fZe,fphi,LM] = Japan_CGM(fM,max_iter,fpop,A,ftM,fZ)
         alpha(isnan(alpha)) = 0;
         alpha = alpha + .001;
         prob_diff = [prob_diff;[sum(abs(ao(:)-alpha(:)))/sum(ao(:)),mean(abs(to(:)-theta(:)))]];
-        diff = sum(abs(ao(:)-alpha(:)))/sum(ao(:));
+        %diff = sum(abs(ao(:)-alpha(:)))/sum(ao(:));
+        diff = mean(diff);
         if diff < .0025 || iter >= max_iter
             conv = 1;
         end

@@ -125,12 +125,13 @@ function [fM1,fphi1,fZe1,fM2,fphi2,fZe2,LM] = Japan_MVCGM(fM1,fM2,max_iter,ftM1,
         end
 
         [theta1n,theta2n] = est_theta(fM1,fM2);
-        diff = .5*sum(abs(theta1n(:)-theta1(:)))/sum(theta1(:)) + .5*sum(abs(theta2n(:)-theta2(:)))/sum(theta2(:));
-        if diff < .001 || iter >= max_iter
+        %diff = .5*sum(abs(theta1n(:)-theta1(:)))/sum(theta1(:)) + .5*sum(abs(theta2n(:)-theta2(:)))/sum(theta2(:));
+        diff = mean(diff);
+        if diff < .0025 || iter >= max_iter
             conv=1;
         end
 
-        LM(1,iter,6) = diff;
+        %LM(1,iter,6) = diff;
         theta1 = theta1n;
         theta2 = theta2n;
     end

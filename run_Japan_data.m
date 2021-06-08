@@ -41,6 +41,17 @@ function n = run_Japan_data(pref,Fout,max_iter)
         fpop2(i) = sum(M2(:))/size(M2,3);
     end
     
+    fM = fM1+fM2;
+    tic
+    [M,Z,phi,L] = Japan_CGM(ones(size(fM1)),max_iter,fpop1+fpop2,A1,fM1+fM2,fZ1+fZ2);
+    t = toc;
+    nae = 0;
+    for i=1:size(M,1)
+        nae = nae + Mdiff(squeeze(fM(i,:,:,:,:)),squeeze(M(i,:,:,:,:)));
+    end
+    nae = nae(1)/size(fM,1);
+    save("base_all_"+Fout,"M","Z","t","L","nae");
+    
     %Run algorithms, track time
     tic
     [M1,phi1,Z1,M2,phi2,Z2,L] = Japan_MVCGM(ones(size(fM1)),ones(size(fM2)),max_iter,fM1,fM2,fpop1,fpop2,A1,A2,fZ1,fZ2);
@@ -48,8 +59,8 @@ function n = run_Japan_data(pref,Fout,max_iter)
     nae1 = 0;
     nae2 = 0;
     for i=1:size(M1,1)
-        nae1 = nae1 + Mdiff(squeeze(fM1(1,:,:,:,:)),squeeze(M1(1,:,:,:,:)));
-        nae2 = nae2 + Mdiff(squeeze(fM2(1,:,:,:,:)),squeeze(M2(1,:,:,:,:)));
+        nae1 = nae1 + Mdiff(squeeze(fM1(i,:,:,:,:)),squeeze(M1(i,:,:,:,:)));
+        nae2 = nae2 + Mdiff(squeeze(fM2(i,:,:,:,:)),squeeze(M2(i,:,:,:,:)));
     end
     nae1 = nae1(1)/size(M1,1);
     nae2 = nae2(1)/size(M2,1);
@@ -64,24 +75,15 @@ function n = run_Japan_data(pref,Fout,max_iter)
     nae1 = 0;
     nae2 = 0;
     for i=1:size(M1,1)
-        nae1 = nae1 + Mdiff(squeeze(fM1(1,:,:,:,:)),squeeze(M1(1,:,:,:,:)));
-        nae2 = nae2 + Mdiff(squeeze(fM2(1,:,:,:,:)),squeeze(M2(1,:,:,:,:)));
+        nae1 = nae1 + Mdiff(squeeze(fM1(i,:,:,:,:)),squeeze(M1(i,:,:,:,:)));
+        nae2 = nae2 + Mdiff(squeeze(fM2(i,:,:,:,:)),squeeze(M2(i,:,:,:,:)));
     end
     nae1 = nae1(1)/size(fM1,1);
     nae2 = nae2(1)/size(fM2,1);
     save("base_"+Fout,"M1","M2","Z1","Z2","t","L1","L2","nae1","nae2");
     flag=3
     
-    fM = fM1+fM2;
-    tic
-    [M,Z,phi,L] = Japan_CGM(ones(size(fM1)),max_iter,fpop1+fpop2,A1,fM1+fM2,fZ1+fZ2);
-    t = toc;
-    nae = 0;
-    for i=1:size(M1,1)
-        nae = nae + Mdiff(squeeze(fM(1,:,:,:,:)),squeeze(M(1,:,:,:,:)));
-    end
-    nae = nae1(1)/size(fM,1);
-    save("base_all_"+Fout,"M","Z","t","L","nae");
+    
     flag=4
     
     
